@@ -1,6 +1,7 @@
 const db = require('../config/db');
 const fs = require('fs');
 const { scanFile } = require('../utils/antivirus');
+const notificationQueue = require('../utils/notificationQueue');
 
 exports.uploadDocuments = async (req, res) => {
     if (!req.files || req.files.length === 0) {
@@ -22,6 +23,11 @@ exports.uploadDocuments = async (req, res) => {
             const v = [f.originalname, f.size, f.path, f.mimetype];
 
             await db.execute(q, v);
+
+            notificationQueue.push({
+                filename: f.originalname,
+                uploadedAt: new Date()
+            });
         }
 
         res.status(201).json({ 

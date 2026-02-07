@@ -18,7 +18,7 @@ export const useDocuments = () => {
         setError(null);
         try {
             // We use a limit of 5 to make testing pagination easier
-            const data = await getDocuments(page, 5, search, sortBy, order);
+            const data = await getDocuments(page, 10, search, sortBy, order);
             setDocs(data.documents);
             setTotalPages(data.totalPages);
         } catch (err) {

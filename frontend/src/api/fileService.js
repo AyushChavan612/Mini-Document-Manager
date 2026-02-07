@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/api/documents';
-
+const API_URL = import.meta.env.VITE_API_URL;
 
 //Uploads multiple files to the server.
 export const uploadFiles = async (files) => {

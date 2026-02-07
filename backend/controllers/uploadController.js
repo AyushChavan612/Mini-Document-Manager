@@ -3,13 +3,13 @@ const fs = require('fs');
 const path = require('path');
 
 exports.uploadDocuments = async (req, res) => {
-    // 1. Check if files exist
+    // Check if files exist
     if (!req.files || req.files.length === 0) {
         return res.status(400).json({ error: 'No files uploaded' });
     }
 
     try {
-        // 2. Prepare database queries
+        // Prepare database queries
         const insertPromises = req.files.map((file) => {
             const query = `
                 INSERT INTO documents (title, size, path, mime_type)
@@ -27,7 +27,7 @@ exports.uploadDocuments = async (req, res) => {
             return db.execute(query, values);
         });
 
-        // 3. Execute all inserts
+        //  Execute all inserts
         await Promise.all(insertPromises);
 
         res.status(201).json({ 

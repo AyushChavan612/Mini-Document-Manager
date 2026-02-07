@@ -7,9 +7,9 @@ const app = express();
 const PORT = 3000;
 
 // Middleware
-app.use(cors());                 // Allow frontend to access backend
-app.use(express.json());         // Parse JSON bodies
-app.use(express.static('public')); // Serve frontend files (later)
+app.use(cors());                 
+app.use(express.json());         
+app.use(express.static('public')); 
 
 // All document routes will start with /api/documents
 app.use('/api', docRoutes);

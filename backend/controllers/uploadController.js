@@ -1,34 +1,28 @@
 const db = require('../config/db');
 const fs = require('fs');
-const path = require('path');
+const { scanFile } = require('../utils/antivirus');
 
 exports.uploadDocuments = async (req, res) => {
-    // Check if files exist
     if (!req.files || req.files.length === 0) {
         return res.status(400).json({ error: 'No files uploaded' });
     }
 
     try {
-        // Prepare database queries
-        const insertPromises = req.files.map((file) => {
-            const query = `
-                INSERT INTO documents (title, size, path, mime_type)
-                VALUES (?, ?, ?, ?)
-            `;
+        for (f of req.files) {
+            const scan = await scanFile(f.path);
             
-            // Assignment says Title can default to filename
-            const values = [
-                file.originalname, 
-                file.size, 
-                file.path,
-                file.mimetype
-            ];
+            if (scan.isInfected) {
+                if (fs.existsSync(f.path)) fs.unlinkSync(f.path);
+                return res.status(403).json({ 
+                    error: `Security Alert: File ${f.originalname} is infected and was deleted.` 
+                });
+            }
 
-            return db.execute(query, values);
-        });
+            const q = 'INSERT INTO documents (title, size, path, mime_type) VALUES (?, ?, ?, ?)';
+            const v = [f.originalname, f.size, f.path, f.mimetype];
 
-        //  Execute all inserts
-        await Promise.all(insertPromises);
+            await db.execute(q, v);
+        }
 
         res.status(201).json({ 
             message: 'Documents uploaded successfully',
@@ -40,6 +34,3 @@ exports.uploadDocuments = async (req, res) => {
         res.status(500).json({ error: 'Database error during upload' });
     }
 };
-
-
-

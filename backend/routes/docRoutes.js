@@ -1,10 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const docController = require('../controllers/docController');
 const upload = require('../config/multerConfig');
 
-// POST /documents
-router.post('/documents', upload.array('files'), docController.uploadDocuments);
-// GET /documents - List, Search, and Pagination
-router.get('/documents', docController.getDocuments);
+const uploadController = require('../controllers/uploadController');
+const listController = require('../controllers/listController');
+const downloadController = require('../controllers/downloadController');
+
+// 1. Upload Route
+router.post('/documents', upload.array('files'), uploadController.uploadDocuments);
+
+// 2. List & Search Route
+router.get('/documents', listController.getDocuments);
+
+// 3. Download Route
+router.get('/documents/:id/download', downloadController.downloadDocument);
 module.exports = router;

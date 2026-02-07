@@ -11,7 +11,6 @@ app.use(cors());                 // Allow frontend to access backend
 app.use(express.json());         // Parse JSON bodies
 app.use(express.static('public')); // Serve frontend files (later)
 
-// Mount Routes
 // All document routes will start with /api/documents
 app.use('/api', docRoutes);
 
@@ -21,7 +20,6 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something broke!');
 });
 
-// Start Server
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });

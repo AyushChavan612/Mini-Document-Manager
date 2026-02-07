@@ -10,6 +10,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "archiver": "^7.0.1",
+    "clamscan": "^2.4.0",
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "multer": "^2.0.2",
